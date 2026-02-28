@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
 import { IJob } from "./job.interface";
 import Job from "./job.model";
+import { getUniqueKey } from "../../../helpers/getUniqueKey";
 
 class JobService {
   private job: typeof Job;
@@ -11,6 +12,7 @@ class JobService {
   }
 
   async createJob(payload: IJob): Promise<IJob> {
+    payload.jobId = getUniqueKey("JOB");
     const result = await this.job.create(payload);
     return result;
   }
