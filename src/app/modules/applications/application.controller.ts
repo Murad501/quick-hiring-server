@@ -22,11 +22,28 @@ class ApplicationController {
   });
 
   getAllApplications = catchAsync(async (req: Request, res: Response) => {
-    const result = await this.applicationService.getAllApplications();
+    const result = await this.applicationService.getAllApplications(
+      req.query as Record<string, string>,
+    );
     responseReturn(res, {
       success: true,
       statusCode: httpStatus.OK,
       message: "Applications retrieved successfully",
+      data: result,
+    });
+  });
+
+  updateApplicationStatus = catchAsync(async (req: Request, res: Response) => {
+    const { applicationId } = req.params;
+    const { status } = req.body;
+    const result = await this.applicationService.updateApplicationStatus(
+      applicationId,
+      status,
+    );
+    responseReturn(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Application status updated successfully",
       data: result,
     });
   });

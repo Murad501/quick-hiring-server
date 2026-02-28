@@ -7,6 +7,7 @@ export type IApplication = {
   email: string;
   resumeLink: string;
   coverNote: string;
+  status: "pending" | "reviewed";
 };
 
 export type ApplicationModel = Model<IApplication>;

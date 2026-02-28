@@ -24,6 +24,15 @@ const createApplicationZodSchema = z.object({
   }),
 });
 
+const updateApplicationStatusZodSchema = z.object({
+  body: z.object({
+    status: z.enum(["pending", "reviewed"], {
+      required_error: "Status is required",
+    }),
+  }),
+});
+
 export const ApplicationValidation = {
   createApplicationZodSchema,
+  updateApplicationStatusZodSchema,
 };

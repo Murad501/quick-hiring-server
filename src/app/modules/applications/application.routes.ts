@@ -17,5 +17,11 @@ router.post(
   validateRequest(ApplicationValidation.createApplicationZodSchema),
   applicationController.applyForJob,
 );
+router.patch(
+  "/:applicationId/status",
+  auth(USER_ROLE.ADMIN),
+  validateRequest(ApplicationValidation.updateApplicationStatusZodSchema),
+  applicationController.updateApplicationStatus,
+);
 
 export const applicationRoutes = router;

@@ -28,6 +28,11 @@ const applicationSchema = new Schema<IApplication, ApplicationModel>(
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["pending", "reviewed"],
+      default: "pending",
+    },
   },
   {
     timestamps: true,

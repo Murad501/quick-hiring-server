@@ -5,6 +5,7 @@ import Application from "../applications/application.model";
 import { IJob } from "./job.interface";
 import Job from "./job.model";
 import { getUniqueKey } from "../../../helpers/getUniqueKey";
+import { queryMaker } from "../../../helpers/queryMaker";
 
 class JobService {
   private job: typeof Job;
@@ -19,8 +20,33 @@ class JobService {
     return result;
   }
 
-  async getAllJobs(): Promise<IJob[]> {
-    const result = await this.job.find({});
+  async getAllJobs(query: Record<string, string>): Promise<IJob[]> {
+    const { filter, searchQuery, ...options } = queryMaker(query);
+    const { sortQuery, skipQuery, limitQuery } = options as any;
+
+    const searchableFields = [
+      "title",
+      "company",
+      "location",
+      "category",
+      "description",
+    ];
+    const finalFilters: any = { ...filter };
+
+    if (searchQuery) {
+      finalFilters.$and = finalFilters.$and || [];
+      finalFilters.$and.push({
+        $or: searchableFields.map((field) => ({
+          [field]: { $regex: searchQuery, $options: "i" },
+        })),
+      });
+    }
+
+    const result = await this.job
+      .find(finalFilters)
+      .sort(sortQuery)
+      .skip(skipQuery)
+      .limit(limitQuery);
     return result;
   }
 

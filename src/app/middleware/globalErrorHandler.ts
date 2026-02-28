@@ -36,6 +36,21 @@ const globalErrorHandler: ErrorRequestHandler = (
     statusCode = simpliFiedError?.statusCode;
     message = simpliFiedError?.message;
     errorMessages = simpliFiedError?.errorMessages;
+  } else if (error?.code === 11000) {
+    statusCode = 409;
+    const field = Object.keys(error.keyPattern)[0];
+    message = `Duplicate field value: ${field}. Please use another value!`;
+
+    if (error.message.includes("applications")) {
+      message = "You have already applied for this job with this email.";
+    }
+
+    errorMessages = [
+      {
+        path: field || "",
+        message: message,
+      },
+    ];
   } else if (error?.name === "CastError") {
     const simpliFiedError = handleCastError(error);
     statusCode = simpliFiedError?.statusCode;

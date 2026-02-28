@@ -14,6 +14,7 @@ process.on("uncaughtException", (error: Error) => {
 
 const startServer = async () => {
   try {
+    logger.info(`🚀 Server is starting...`.blue.bold);
     // Database connection initialization
     const con = new database();
     await con.mongoConnect(config.mongodb_host as string);

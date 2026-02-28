@@ -10,8 +10,6 @@ dotenv.config();
 
 const app: Express = express();
 
-
-
 app.set("trust proxy", true);
 
 const logTime = () => {
@@ -47,7 +45,6 @@ const options: RequestHandler[] = [
 app.use(...options);
 
 app.use("/api/v1/", version_1);
-
 
 app.get("/", (req, res) => {
   res.send("🔥 Server Ready to Serve");
