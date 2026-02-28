@@ -22,14 +22,16 @@ class JobController {
   });
 
   getAllJobs = catchAsync(async (req: Request, res: Response) => {
-    const result = await this.jobService.getAllJobs(
+    const { data, meta } = await this.jobService.getAllJobs(
       req.query as Record<string, string>,
     );
+
     responseReturn(res, {
       success: true,
       statusCode: httpStatus.OK,
       message: "Jobs retrieved successfully",
-      data: result,
+      meta,
+      data: data,
     });
   });
 

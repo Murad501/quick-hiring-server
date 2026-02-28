@@ -26,11 +26,12 @@ class ApplicationService {
     return result;
   }
 
-  async getAllApplications(
-    query: Record<string, string>,
-  ): Promise<IApplication[]> {
+  async getAllApplications(query: Record<string, string>): Promise<{
+    data: IApplication[];
+    meta: { page: number; limit: number; total: number };
+  }> {
     const { filter, searchQuery, ...options } = queryMaker(query);
-    const { sortQuery, skipQuery, limitQuery } = options as any;
+    const { sortQuery, skipQuery, limitQuery, pageQuery } = options as any;
 
     const searchableFields = ["name", "email", "coverNote"];
     const finalFilters: any = { ...filter };
@@ -44,12 +45,20 @@ class ApplicationService {
       });
     }
 
-    const result = await this.application
+    const data = await this.application
       .find(finalFilters)
       .sort(sortQuery)
       .skip(skipQuery)
       .limit(limitQuery);
-    return result;
+    const total = await this.application.countDocuments(finalFilters);
+    return {
+      data,
+      meta: {
+        page: pageQuery,
+        limit: limitQuery,
+        total,
+      },
+    };
   }
 
   async updateApplicationStatus(

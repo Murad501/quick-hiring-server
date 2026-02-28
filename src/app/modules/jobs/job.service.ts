@@ -20,9 +20,12 @@ class JobService {
     return result;
   }
 
-  async getAllJobs(query: Record<string, string>): Promise<IJob[]> {
+  async getAllJobs(query: Record<string, string>): Promise<{
+    data: IJob[];
+    meta: { page: number; limit: number; total: number };
+  }> {
     const { filter, searchQuery, ...options } = queryMaker(query);
-    const { sortQuery, skipQuery, limitQuery } = options as any;
+    const { sortQuery, skipQuery, limitQuery, pageQuery } = options as any;
 
     const searchableFields = [
       "title",
@@ -42,12 +45,20 @@ class JobService {
       });
     }
 
-    const result = await this.job
+    const data = await this.job
       .find(finalFilters)
       .sort(sortQuery)
       .skip(skipQuery)
       .limit(limitQuery);
-    return result;
+    const total = await this.job.countDocuments(finalFilters);
+    return {
+      data,
+      meta: {
+        page: pageQuery,
+        limit: limitQuery,
+        total,
+      },
+    };
   }
 
   async getSingleJob(jobId: string): Promise<IJob | null> {

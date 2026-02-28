@@ -1,7 +1,7 @@
 export const queryMaker = (query: Record<string, string>) => {
   const { limit, page, sort, search, ...rest } = query;
-  const limitQuery = limit ? parseInt(limit) : 10;
-  const pageQuery = page ? parseInt(page) : 1;
+  const limitQuery = Math.max(parseInt(limit || "10") || 10, 1);
+  const pageQuery = Math.max(parseInt(page || "1") || 1, 1);
   const sortQuery: Record<string, 1 | -1> = { createdAt: -1 };
   const skipQuery = (pageQuery - 1) * limitQuery;
   const searchQuery = search ? search : "";
