@@ -30,8 +30,8 @@ const applicationSchema = new Schema<IApplication, ApplicationModel>(
     },
     status: {
       type: String,
-      enum: ["pending", "reviewed"],
-      default: "pending",
+      enum: ["new", "reviewed", "interviewing", "rejected", "hired"],
+      default: "new",
     },
   },
   {

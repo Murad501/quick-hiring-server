@@ -26,7 +26,7 @@ const createApplicationZodSchema = z.object({
 
 const updateApplicationStatusZodSchema = z.object({
   body: z.object({
-    status: z.enum(["pending", "reviewed"], {
+    status: z.enum(["new", "reviewed", "interviewing", "rejected", "hired"], {
       required_error: "Status is required",
     }),
   }),

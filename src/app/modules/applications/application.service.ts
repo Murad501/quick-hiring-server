@@ -45,14 +45,53 @@ class ApplicationService {
       });
     }
 
-    const data = await this.application
-      .find(finalFilters)
-      .sort(sortQuery)
-      .skip(skipQuery)
-      .limit(limitQuery);
-    const total = await this.application.countDocuments(finalFilters);
+    const countPipeline = [{ $match: finalFilters }, { $count: "total" }];
+
+    const pipeline = [
+      { $match: finalFilters },
+      { $sort: sortQuery },
+      { $skip: skipQuery },
+      { $limit: limitQuery },
+      {
+        $lookup: {
+          from: "jobs",
+          localField: "jobId",
+          foreignField: "jobId",
+          as: "jobDetails",
+        },
+      },
+      {
+        $unwind: {
+          path: "$jobDetails",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          jobTitle: "$jobDetails.title",
+          jobCompany: "$jobDetails.company",
+        },
+      },
+      {
+        $project: {
+          jobDetails: 0,
+        },
+      },
+    ];
+
+    const data = await this.application.aggregate(pipeline);
+
+    // Fallback since aggregate doesn't automatically map Mongoose virtuals like createdAt
+    const formattedData = data.map((item) => {
+      item.id = item._id;
+      return item;
+    });
+
+    const totalRes = await this.application.aggregate(countPipeline);
+    const total = totalRes.length > 0 ? totalRes[0].total : 0;
+
     return {
-      data,
+      data: formattedData as unknown as IApplication[],
       meta: {
         page: pageQuery,
         limit: limitQuery,

@@ -32,6 +32,11 @@ const jobSchema = new Schema<IJob, JobModel>(
       required: true,
       default: [],
     },
+    status: {
+      type: String,
+      enum: ["open", "closed"],
+      default: "open",
+    },
     sections: [
       {
         title: {

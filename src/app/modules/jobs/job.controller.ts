@@ -22,6 +22,23 @@ class JobController {
   });
 
   getAllJobs = catchAsync(async (req: Request, res: Response) => {
+    // Only return open jobs for public UI
+    const query = { ...req.query, status: "open" };
+    const { data, meta } = await this.jobService.getAllJobs(
+      query as Record<string, string>,
+    );
+
+    responseReturn(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Jobs retrieved successfully",
+      meta,
+      data: data,
+    });
+  });
+
+  adminGetAllJobs = catchAsync(async (req: Request, res: Response) => {
+    // Return all jobs for admin
     const { data, meta } = await this.jobService.getAllJobs(
       req.query as Record<string, string>,
     );
@@ -53,6 +70,18 @@ class JobController {
       success: true,
       statusCode: httpStatus.OK,
       message: "Job deleted successfully",
+      data: result,
+    });
+  });
+
+  updateJobStatus = catchAsync(async (req: Request, res: Response) => {
+    const { jobId } = req.params;
+    const { status } = req.body;
+    const result = await this.jobService.updateJobStatus(jobId, status);
+    responseReturn(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Job status updated successfully",
       data: result,
     });
   });

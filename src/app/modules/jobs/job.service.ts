@@ -45,14 +45,34 @@ class JobService {
       });
     }
 
-    const data = await this.job
+    const jobs = await this.job
       .find(finalFilters)
       .sort(sortQuery)
       .skip(skipQuery)
-      .limit(limitQuery);
+      .limit(limitQuery)
+      .lean();
+
     const total = await this.job.countDocuments(finalFilters);
+
+    // Fetch application counts
+    const jobIds = jobs.map((job) => job.jobId);
+    const counts = await Application.aggregate([
+      { $match: { jobId: { $in: jobIds } } },
+      { $group: { _id: "$jobId", count: { $sum: 1 } } },
+    ]);
+
+    const countMap: Record<string, number> = counts.reduce((acc, curr) => {
+      acc[curr._id] = curr.count;
+      return acc;
+    }, {});
+
+    const data = jobs.map((job) => ({
+      ...job,
+      applicationCount: countMap[job.jobId] || 0,
+    }));
+
     return {
-      data,
+      data: data as unknown as IJob[],
       meta: {
         page: pageQuery,
         limit: limitQuery,
@@ -66,6 +86,20 @@ class JobService {
     if (!result) {
       throw new ApiError(httpStatus.NOT_FOUND, "Job not found");
     }
+    return result;
+  }
+
+  async updateJobStatus(jobId: string, status: string): Promise<IJob | null> {
+    const result = await this.job.findOneAndUpdate(
+      { jobId },
+      { status },
+      { new: true },
+    );
+
+    if (!result) {
+      throw new ApiError(httpStatus.NOT_FOUND, "Job not found");
+    }
+
     return result;
   }
 
