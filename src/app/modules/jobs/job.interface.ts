@@ -6,6 +6,12 @@ export type IJob = {
   location: string;
   category: string;
   description: string;
+  type: string;
+  tags: string[];
+  sections: {
+    title: string;
+    values: string[];
+  }[];
   jobId: string;
 };
 

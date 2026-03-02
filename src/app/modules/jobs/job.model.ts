@@ -23,6 +23,28 @@ const jobSchema = new Schema<IJob, JobModel>(
       type: String,
       required: true,
     },
+    type: {
+      type: String,
+      required: true,
+    },
+    tags: {
+      type: [String],
+      required: true,
+      default: [],
+    },
+    sections: [
+      {
+        title: {
+          type: String,
+          required: true,
+        },
+        values: {
+          type: [String],
+          required: true,
+          default: [],
+        },
+      },
+    ],
     jobId: {
       type: String,
       required: true,
