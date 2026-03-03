@@ -81,6 +81,29 @@ class JobService {
     };
   }
 
+  async getCompaniesWithJobCount(): Promise<{ name: string; count: number }[]> {
+    const pipeline = [
+      { $match: { status: "open" } },
+      {
+        $group: {
+          _id: "$company",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$_id",
+          count: 1,
+        },
+      },
+      { $sort: { count: -1 } },
+    ];
+
+    const result = await this.job.aggregate(pipeline as any[]);
+    return result;
+  }
+
   async getSingleJob(jobId: string): Promise<IJob | null> {
     const result = await this.job.findOne({ jobId });
     if (!result) {

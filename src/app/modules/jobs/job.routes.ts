@@ -5,6 +5,7 @@ import { USER_ROLE } from "../../../enum/user";
 
 const router = Router();
 
+router.get("/companies", jobController.getCompanies);
 router.get("/", jobController.getAllJobs);
 router.get("/admin", auth(USER_ROLE.ADMIN), jobController.adminGetAllJobs);
 router.get("/:jobId", jobController.getSingleJob);
