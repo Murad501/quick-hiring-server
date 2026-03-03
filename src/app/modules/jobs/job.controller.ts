@@ -95,6 +95,17 @@ class JobController {
       data: result,
     });
   });
+
+  updateJob = catchAsync(async (req: Request, res: Response) => {
+    const { jobId } = req.params;
+    const result = await this.jobService.updateJob(jobId, req.body);
+    responseReturn(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Job updated successfully",
+      data: result,
+    });
+  });
 }
 
 const jobController = new JobController();

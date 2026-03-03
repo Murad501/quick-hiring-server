@@ -147,6 +147,18 @@ class JobService {
       throw error;
     }
   }
+
+  async updateJob(jobId: string, payload: Partial<IJob>): Promise<IJob | null> {
+    const result = await this.job.findOneAndUpdate({ jobId }, payload, {
+      new: true,
+    });
+
+    if (!result) {
+      throw new ApiError(httpStatus.NOT_FOUND, "Job not found");
+    }
+
+    return result;
+  }
 }
 
 const jobService = new JobService(Job);

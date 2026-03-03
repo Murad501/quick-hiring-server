@@ -16,6 +16,7 @@ router.patch(
   auth(USER_ROLE.ADMIN),
   jobController.updateJobStatus,
 );
+router.patch("/:jobId", auth(USER_ROLE.ADMIN), jobController.updateJob);
 router.delete("/:jobId", auth(USER_ROLE.ADMIN), jobController.deleteJob);
 
 export const jobRoutes = router;
