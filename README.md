@@ -87,7 +87,8 @@ The project follows a modular, feature-based architecture for scalability and ma
 
 ## 📡 API Reference
 
-All requests must be prefixed with `/api/v1`.
+All requests must be prefixed with `/api/v1`.  
+**Demo API URL**: `https://quick-hiring-server.onrender.com/api/v1`
 
 ### 🔐 Authentication
 
@@ -228,7 +229,3 @@ All API responses follow this structure:
 ### Error Handling
 
 Errors are caught by the `globalErrorHandler` middleware, returning descriptive messages and status codes (e.g., 400 Bad Request, 401 Unauthorized).
-
----
-
-_Developed as part of the QTech Job Task._
