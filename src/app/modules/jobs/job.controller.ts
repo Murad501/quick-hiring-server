@@ -84,6 +84,16 @@ class JobController {
     });
   });
 
+  getCategories = catchAsync(async (req: Request, res: Response) => {
+    const data = await this.jobService.getCategoriesWithJobCount();
+    responseReturn(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Categories retrieved successfully",
+      data,
+    });
+  });
+
   updateJobStatus = catchAsync(async (req: Request, res: Response) => {
     const { jobId } = req.params;
     const { status } = req.body;
