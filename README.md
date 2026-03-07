@@ -88,7 +88,7 @@ The project follows a modular, feature-based architecture for scalability and ma
 ## 📡 API Reference
 
 All requests must be prefixed with `/api/v1`.  
-**Demo API URL**: `https://quick-hiring-server.onrender.com/api/v1`
+**Demo API URL**: `https://quick-hiring-server.vercel.app/api/v1`
 
 ### 🔐 Authentication
 
