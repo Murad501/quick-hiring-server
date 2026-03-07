@@ -28,6 +28,8 @@ export const queryMaker = (query: Record<string, string>) => {
             .map((item) => {
               if (key === "status") {
                 return { [key]: item };
+              } else if (item === "true" || item === "false") {
+                return { [key]: item === "true" };
               } else {
                 return { [key]: { $regex: item, $options: "i" } };
               }

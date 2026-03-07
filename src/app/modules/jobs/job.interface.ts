@@ -15,6 +15,7 @@ export type IJob = {
   }[];
   jobId: string;
   applicationCount?: number;
+  isFeatured?: boolean;
 };
 
 export type JobModel = Model<IJob>;

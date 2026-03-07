@@ -55,6 +55,10 @@ const jobSchema = new Schema<IJob, JobModel>(
       required: true,
       unique: true,
     },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
